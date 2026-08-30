@@ -16,14 +16,14 @@ jobs:
       - name: Verify Application Files
         run: |
           echo "Checking application files..."
-          test -f index.html
-          echo "index.html found successfully."
+          test -f webapp/index.html
+          echo "webapp/index.html found successfully."
 
       - name: Build Application
         run: |
           echo "Starting build..."
           mkdir -p build
-          cp index.html build/index.html
+          cp webapp/index.html build/index.html
           echo "Build completed successfully."
 
       - name: Test Application
