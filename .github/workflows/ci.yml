@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "Checking application files..."
           test -f webapp/index.html
-          echo "webapp/index.html found successfully."
+          echo "index.html found successfully."
 
       - name: Build Application
         run: |
@@ -42,3 +42,23 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
           echo "Build completed successfully."
+
+      - name: Notify Slack - Success
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{
+              "text": "✅ CI Build Successful\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}"
+            }' \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
+
+      - name: Notify Slack - Failure
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{
+              "text": "❌ CI Build Failed\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}"
+            }' \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
